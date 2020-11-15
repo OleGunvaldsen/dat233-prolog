@@ -17,7 +17,7 @@ SlantList = [1].
 check(Board, pos, pos1, pos2, pos3):- posx is pos+1,
 /* all cheks, need to set slantvalue S according to check result*/
 
-member(slant(S), SlantList),
+%member(slant(S), SlantList),
 check(Board, posx, posx+1, posx+sizex+1, posx+sizex+2).
 
 
@@ -36,7 +36,8 @@ check0([V1|T1],[V2|T2],[V3|T3],[V4|T4]):-
     V1 #= 0 -> change([V1|T1],[V4|T4]),
     V1 #= 0 -> change([V1|T1],[V4|T4]),
     V1 #= 0 -> change([V2|T2],[V3|T3]).
-% Num[Value, Position, Connections, Group]
+
+/* Num[Value, Position, Connections, Group] */
 Liste=[[0,1,0,a],[1,2,0,a],[1,3,0,a],[5,4,0,a]].
 
 run:- check0(Liste).
