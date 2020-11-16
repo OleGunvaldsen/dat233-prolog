@@ -27,15 +27,11 @@ check(Board, posx, posx+1, posx+sizex+1, posx+sizex+2).
 
 fillBoard([-1,-1,1,1,-1,0,2,-1,-1,-1,-1,1,-1,2,-1,-1,-1,-1,-1,2,-1,0,2,-1,-1]).
 
-change([V1|[P1|[C1|G1]]],[V2|[P2|[C2|G2]]],C1_New,C2_New):- 
-    write('first '),
-    write(C1),
-    nl,
-    C1NY #= C1 + 1,
-    C2NY #= C2 + 1,
-    write('second '),
-    write(C1NY),
-    nl.
+addConnection([V1|[P1|[C1|G1]]],[V2|[P2|[C2|G2]]],C1New,C2New):- 
+    write('Connection1: '), write(C1), nl,
+    C1New #= C1 + 1,
+    C2New #= C2 + 1,
+    write('Connection1_new: '), write(C1New), nl.
 
 % replaceP(pos, new_variable, list, new_list)
 replaceP(_, _, [], []).
@@ -45,26 +41,26 @@ replaceP(O, R, [H|T], [H|T2]) :- dif(H,O), replaceP(O, R, T, T2).
 
 %megaChecker(Liste, Start, X):- check0().
 
-check0(List,
-    nth0(Start,List,[Value1|Tail1]),
-    nth0(Start+1,List,[Value2|Tail2]),
-    nth0(Start+1+X,List,[Value3|Tail3]),
-    nth0(Start+2+X,List,[Value4|Tail4]), 
-    NewList):-
-        V1 #= 0; V4 #= 0 -> change([V2|T2],[V3|T3],New2,New3), 
-            replaceP(Start+1,New2,List,NewList), replaceP(Start+1+X,New3,List,NewList);
-        V2 #= 0; V3 #= 0 -> change([V1|T1],[V4|T4],New1,New4), 
-            replaceP(Start,New1,List,NewList), replaceP(Start+2+X,New4,List,NewList).
+check0(Start,List):-
+        V1 #= 0; V4 #= 0 -> addConnection(nth0(Start+1,List,[V2|T2]),
+                            nth0(Start+1+X,List,[V3|T3]),New2,New3), 
+                            replaceP(Start+1,New2,List,NewList), 
+                            replaceP(Start+1+X,New3,List,NewList);
+        V2 #= 0; V3 #= 0 -> addConnection(nth0(Start,List,[V1|T1]),
+                            nth0(Start+2+X,List,[V4|T4]),New1,New4), 
+                            replaceP(Start,New1,List,NewList), 
+                            replaceP(Start+2+X,New4,List,NewList),
+        check0(Start+1,NewList).
 
 
 /*
 check0([[V1|T1],[V2|T2],[V3|T3],[V4|T4]]):-
-    V1 #= 0 -> change([V2|T2],[V3|T3]),
-    V2 #= 0 -> change([V1|T1],[V4|T4]),
-    V3 #= 0 -> change([V1|T1],[V4|T4]),
-    V4 #= 0 -> change([V2|T2],[V3|T3]).
+    V1 #= 0 -> addConnection([V2|T2],[V3|T3]),
+    V2 #= 0 -> addConnection([V1|T1],[V4|T4]),
+    V3 #= 0 -> addConnection([V1|T1],[V4|T4]),
+    V4 #= 0 -> addConnection([V2|T2],[V3|T3]).
 */
 /* Num[Value, Position, Connections, Group] */
 
 
-run:- List=[[0,1,X,a],[0,2,X,b],[1,3,X,c],[-1,4,X,d]], check0(List,L1,L2,L3,L4,NewList), write(NewList).
+run:- List=[[0,1,X,a],[0,2,X,b],[1,3,X,c],[-1,4,X,d]], check0(0,List), write(NewList).
