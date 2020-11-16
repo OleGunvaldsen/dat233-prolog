@@ -23,5 +23,25 @@ check(Board, posx, posx+1, posx+sizex+1, posx+sizex+2).
 /*The slant elements cannot be X in list, must be "/" or "\".*/
 allSlantsSet([H|T]):- H = "\\", "/", allSlantsSet(T).
 
+% Write Output  
+writeFullOutput(S, X, Y,P):- write('puzzles '),write(P),nl, write('size '), write(X), write('x'), write(Y), nl, writeOutput(S).
 
+writeOutput([]).
+writeOutput([E|R]):- writeLine(E), writeOutput(R).
 
+writeLine([]):- nl.
+writeLine([E|R]):- write(' '), translate(E,X) ,write(X), writeLine(R).
+translate(32, '_').
+
+translate(X,X).
+run:- E = 
+[
+[1 , _, _, _, _],
+[x ,x ,x ,x],
+[_ ,2 ,1 ,_ ,1],
+[x ,x ,x ,x],
+[0 ,3 ,_ ,2 ,_],
+[x ,x ,x ,x],
+[1 ,1 ,3 ,_ ,1],
+[x ,x ,x ,x],
+[_ ,_ ,1 ,_ ,1]], writeFullOutput(E,2,3,2).
